@@ -9,10 +9,10 @@ namespace StatisticsSharp
     public class MatrixLib
     {
         /// <summary>
-        /// 逆行列
+        /// 逆行列に変換
         /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
+        /// <param name="input">入力</param>
+        /// <returns>変換結果</returns>
         public static double[,] InverseMatrix(double[,] input)
         {
             var matrix = (double[,])input.Clone();

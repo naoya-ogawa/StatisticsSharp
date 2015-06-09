@@ -28,6 +28,7 @@ namespace StatisticsTest
             var regression = new Regression(y,x);
             Assert.AreEqual(0.589, regression.Coefficient()[0], 0.01);
             Assert.AreEqual(1.954, regression.Intercept(), 0.01);
+            Assert.AreEqual(0.696, regression.MultipleCorrelationCoefficient(), 0.01);
         }
     }
 }

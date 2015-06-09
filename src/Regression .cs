@@ -37,7 +37,12 @@ namespace StatisticsSharp
         /// 目的変数
         /// </summary>
         private readonly IReadOnlyList<double> _y;
-        private IReadOnlyList<double> Y { get { return _y; } }
+
+        private IReadOnlyList<double> Y
+        {
+            get { return _y; }
+        }
+
         /// <summary>
         /// 説明変数
         /// </summary>
@@ -50,7 +55,7 @@ namespace StatisticsSharp
         /// <returns></returns>
         public IReadOnlyList<double> Coefficient()
         {
-            var matrix = CreateMatrix(Y, X);
+            var matrix = SimultaneousEquation_Matrix(Y, X);
             return MatrixLib.GaussElimination(matrix, _x.Count);
         }
 
@@ -77,9 +82,9 @@ namespace StatisticsSharp
             var intercept = Intercept();
 
             // 予測値を算出
-            var expectancy = X.Select((x) =>
+            var expectancy = X[0].Select((rec, recordIndex) =>
             {
-                return x.Zip(coefficient, (i, j) => { return i * j; })
+                return X.Select((x, index) => { return x[recordIndex] * coefficient[index]; })
                     .Sum() + intercept;
             }).ToList();
 
@@ -114,10 +119,9 @@ namespace StatisticsSharp
         /// <param name="y">目的変数</param>
         /// <param name="x">説明変数</param>
         /// <returns>係数行列</returns>
-        private static double[,] CreateMatrix(
+        private static double[,] SimultaneousEquation_Matrix(
             IReadOnlyList<double> y, IReadOnlyList<IReadOnlyList<double>> x)
         {
-
             var dimension = x.Count;
             var matrix = new double[dimension, dimension + 1];
 
@@ -127,10 +131,11 @@ namespace StatisticsSharp
                 {
                     matrix[k, i] = SumProductsDeviation(x[k], x[i]);
                 }
+
                 matrix[k, dimension] = SumProductsDeviation(x[k], y);
             }
+
             return matrix;
         }
-
     }
 }
